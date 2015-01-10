@@ -37,7 +37,9 @@
     width:100%;
     height:80%;
   }
-  .output-panel {margin-left: 5em;margin-top: 1em}
+  .output-panel {margin-left: 5em;margin-top: 1em;
+    position:absolute;
+    z-index:6;}
   .controls {
     width: 60%;
     height:50%;
@@ -52,7 +54,11 @@
 
 
 
-  #go{width:14%;}
+  #go{
+    width:3em;
+    height:2em;
+    position:absolute;
+    z-index:6;}
 
 
   canvas{
@@ -73,22 +79,7 @@ overflow:hidden;
 button{
 float:right;
 }*/
-.slider {
-  overflow-y: hidden;
-  max-height: 600px;
 
-  transition-property: all;
-  transition-duration: .5s;
-  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
-
-  background: pink;
-  height: 600px;
-  width: 600px;
-}
-
-.slider.closed {
-  max-height: 0;
-}
 .upsideDown{transform: rotate(-180deg);  }
 #slopeMap{
   position: absolute;
@@ -140,9 +131,8 @@ body    {overflow-y:scroll;}
     <div id="input-panel">
       <input id="start" class="controls" type="text" placeholder="Start: "><br>
       <input id="end" class="controls" type="text" placeholder="End: ">
-      <button id="go"  onclick="calcRoute(latLongArray);">Go!</button>
+      <button id="go" class="controls" onclick="calcRoute(latLongArray);">Go!</button>
     </div>
-    <hr>
   </div>
   <div id="map-canvas"></div>
 
@@ -195,8 +185,6 @@ body    {overflow-y:scroll;}
 
   </div>
 </div>
-
-
 
 <script>
 
