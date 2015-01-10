@@ -22,8 +22,8 @@
   #wrapper {
     top: 80%;
     left: 5%;
-    width: 50%;
-    height:1.4em;
+    width: 40%;
+    height:4em;
     /*margin-left: -180px;*/
     z-index: 5;
     background-color: #fff;
@@ -31,11 +31,17 @@
     padding-bottom: 3px;
     border: 1px solid #999;
   }
-  #input-panel {left: 50%;margin-left: 10px;width:100%;}
+  #input-panel {
+    left: 50%;
+    margin-left: 10px;
+    width:100%;
+    height:80%;
+  }
   .output-panel {margin-left: 5em;margin-top: 1em}
   .controls {
     width: 40%;
     height:100%;
+    font-size:1em;
   }
   /*.wrapper>.input-panel( #start.controls #end.controls #go._ )*/
   /*gmaps*/
@@ -105,28 +111,28 @@ float:right;
 .medium{height:60%; width:40%;   transition: all 900ms;}
 .large{ height:100%;width:100%;  transition: all 900ms;}
 
-#slopeMap button{width:16%;height:1.5em;}
 
 
 
-/**/
-.container{
-  width: 100%;
-  margin: 0 auto;
-  margin-top:50px;
-}
 
-#map_container{
-  position: relative;
-}
-#map{
-  height: 0;
-  overflow: hidden;
-  padding-bottom: 22.25%;
-  padding-top: 30px;
-  position: relative;
-}
+/* fonts */
+
+
+
+
+
+
 </style>
+
+
+
+
+
+
+
+
+
+
 <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
 </head>
 <body>
@@ -134,15 +140,13 @@ float:right;
     <div id="input-panel">
       <input id="start" class="controls" type="text" placeholder="Start: ">
       <input id="end" class="controls" type="text" placeholder="End: ">
-      <button id="go" onclick="calcRoute(latLongArray);">Directions2</button>
+      <button id="go" class="controls" onclick="calcRoute(latLongArray);">Go!</button>
     </div>
-
+    <hr>
   </div>
-  <div class="container">
-  <div id="map_container"></div>
   <div id="map-canvas"></div>
-  </div>
-</div>
+
+
 
 
 
@@ -796,3 +800,4 @@ float:right;
 
   </body>
   </html>
+  
