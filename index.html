@@ -4,6 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <title>testBike</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  
   <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
 </head>
 <style>
@@ -409,6 +411,7 @@ only screen and (min-device-pixel-ratio: 1.5) {}
     c = document.getElementById("c");
     // c.width = innerWidth*.4;
     // c.height= innerHeight*0.7;
+    c.width = document.getElementById("threeD-Map").width
     var t = c.getContext("2d"),
 
     f = 200,
