@@ -1,710 +1,918 @@
-<!DOCTYPE html>
-<html lang="en">
-
+<!doctype html>
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>3d2</title>
-  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" />
-  <script src="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700"></script>
-<link href='http://fonts.googleapis.com/css?family=Titillium+Web' rel='stylesheet' type='text/css'>
-  <style>
-  * {
-  box-sizing: border-box;
-}
-  canvas {
-    border: 1px solid black;
-    position: relative;
-    position: inline-block;
-    position: absolute;
-    z-index: -1;
-  }
-  .map-controls {
-    display: block;
-    width: 10%;
-    z-index: 1;
-  }
-  .left-panel {
-    vertical-align: top;
-  }
-  button {
-    width: 5em;
-    height: 4em;
-    border-radius: 5px;
-    background-color: lightBlue;
-  }
-  .display {
-    background-color: HoneyDew;
-  }
-  @media(max-width: 1000px) {
-/*    button {
-      border-radius: 1em;
-      border: 1px solid black;
-      background-color: white;
-      outline: none;
-      font-size: 2em;
-    }*/
-    .panel{
-      font-size: 4em;
-    }
-  }
-  .panel {
-    border: 1px solid black;
-    border-radius: 0em;
-    position: absolute;
-    bottom: 0;
-    width: 101%;
-    height: 35%;
-    margin: 0 auto;
-    text-align: center;
-    font-family: 'Titillium Web', sans-serif;
-    /* Height of the footer */
-    font-size: 2em;
-    background: AliceBlue;
-  }
-  #mainBody{width:80%}
-  .arrow{width:10%;}
-  .left{position:absolute;text-align:left;float:left}
-  .right{float:right;}
+<title>fp8a (a)</title>
+    <meta charset="UTF-8">
 
-  </style>
+<link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+  <script src="https://cdn.firebase.com/js/client/2.0.6/firebase.js"></script>
+
 </head>
-
+<header>
 <body>
-  <canvas id="canvas-map"></canvas>
+<style>
 
+
+
+
+body {
+
+}
+
+
+
+
+h1 {
+	text-align      : center;
+	font            : bold 30px sans-serif;
+}
+
+canvas{
+  position        : absolute;
+  border          : 1px solid black;
+  display         : inline-block;
+}
+#map-controls {
+  position        : absolute;
+  display         : block;
+  z-index         : 1;
+}
+button{
+  width           : 4em;
+  height          : 3em;
+  border-radius   : 0.3em;
+  border          :  1px solid black;
+  background-color: white;
+  outline:none;
+
+}
+a{    text-decoration: none;
+}
+.display{
+  background-color: HoneyDew ;
+
+}
+
+
+
+/* modal*/
+  body {
+    color: #333333;
+    font-family: 'Helvetica', arial;
+    height: 80em;
+  }
+  .wrap {
+    padding: 40px;
+    text-align: center;
+  }
+  hr {
+    clear: both;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    border: 0;
+    border-top: 1px solid #aaaaaa;
+  }
+  h1 {
+    font-size: 30px;
+    margin-bottom: 40px;
+  }
+  p {
+    margin-bottom: 20px;
+  }
+  .modal:before {
+    content: "";
+    display: none;
+    background: rgba(0, 0, 0, 0.6);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+  }
+  .modal:target:before {
+    display: block;
+  }
+  .modal:target .modal-dialog {
+    -webkit-transform: translate(0, 0);
+    -ms-transform: translate(0, 0);
+    transform: translate(0, 0);
+    top: 20%;
+  }
+  .modal-dialog {
+    background: #fefefe;
+    border: #333333 solid 1px;
+    border-radius: 5px;
+    margin-left: -200px;
+    position: fixed;
+    left: 50%;
+    top: -100%;
+    z-index: 11;
+    width: 360px;
+    -webkit-transform: translate(0, -500%);
+    -ms-transform: translate(0, -500%);
+    transform: translate(0, -500%);
+    -webkit-transition: -webkit-transform 0.3s ease-out;
+    -moz-transition: -moz-transform 0.3s ease-out;
+    -o-transition: -o-transform 0.3s ease-out;
+    transition: transform 0.3s ease-out;
+  }
+  .modal-body {
+    padding: 20px;
+  }
+  .modal-header,
+  .modal-footer {
+    padding: 10px 20px;
+  }
+  .modal-header {
+    border-bottom: #eeeeee solid 1px;
+  }
+  .modal-header h2 {
+    font-size: 20px;
+  }
+  .modal-footer {
+    border-top: #eeeeee solid 1px;
+    text-align: right;
+  }
+  /*ADDED TO STOP SCROLLING TO TOP*/
+
+  #close {
+    display: none;
+  }
+  .orange{color:green;}
+  </style>
+</style>
   <table id="map-controls">
-    <tr>
-      <td>
-        <button id="msg1" class="display"></button>
-      </td>
-      <td>
-        <button id="buttonUp" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-up"></i>
-        </button>
-      </td>
-      <td>
-        <button id="msg2" class="display"></button>
+<tr>
+  <td>
+  <button class="display"><span>ms<br></span><span id="msgtop1"></span>  </button>
+  </td><td>
+  <button class="display"><span>len<br></span><span id="msgtop2"></span>  </button>
+  </td><td>
+  <button class="display"><span>m3<br></span><span id="msgtop3"></span>  </button>
+  </td>
+</tr>
 
-      </td>
-    </tr>
+<tr>
+  <td>
+  <button class="display"><span>msg top 1<br></span><span id="msgtop4"></span>  </button>
+  </td><td>
+  <button class="display"><span>msg top 2<br></span><span id="msgtop5"></span>  </button>
+  </td><td>
+  <button class="display"><span>msg top 3<br></span><span id="msgtop6"></span>  </button>
+  </td>
+</tr>
 
-    <tr>
-      <td>
-        <button id="buttonLeft" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-left"></i>
-        </button>
-      </td>
-      <td>
 
-      </td>
-      <td>
-        <button id="buttonRight" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-right"></i>
-        </button>
-      </td>
-    </tr>
+<tr>
+  <td>
+  <button class="display"><span>fps<br></span><span id="msg2"></span>  </button>
+  </td><td>
+  <button id="buttonUp" ><i class="fa fa-arrow-up"></i></button>
+  </td><td>
+  <button id="msg3" class="display" >msg3</button>
+  </td>
+</tr>
 
-    <tr>
-      <td>
-        <button id="buttonZoomIn" class="btn btn-default btn-large"><i class="glyphicon glyphicon-zoom-in"></i>
-        </button>
-      </td>
-      <td>
-        <button id="buttonDown" class="btn btn-default btn-large"><i class="glyphicon glyphicon-arrow-down"></i>
-        </button>
-      </td>
-      <td>
-        <button id="buttonZoomOut" class="btn btn-default btn-large"><i class="glyphicon glyphicon-zoom-out"></i>
-        </button>
-      </td>
-    </tr>
+<tr>
+  <td>
+  <button id="buttonLeft" ><i class="fa fa-arrow-left"></i></button>
+  </td><td>
+<button id="buttonHome" ><i class="fa fa-home"></i></button>
+  </td><td>
+  <button id="buttonRight" ><i class="fa fa-arrow-right"></i></button>
+  </td>
+</tr>
+
+
+<tr>
+  <td><button  class="display">
+  <i class="fa fa-heart"></i> 100
+  </button></td><td>
+  <button id="buttonDown" ><i class="fa fa-arrow-down"></i></button>
+  </td><td><button  class="display">
+
+  <i class="fa fa-fighter-jet"></i><br> 9
+  </button>
+  </td>
+</tr>
+
+
+<tr>
+  <td>
+
+  </td><td>
+  <button id="buttonZoomIn" ><i class="fa fa-search-plus"></i></button>
+  </td><td>
+<button><a href="#modal-one" class="orange">?</a></button>
+
+  </td>
+</tr>
+
+
+<tr>
+  <td>
+
+  </td><td>
+  <button id="buttonZoomOut" ><i class="fa fa-search-minus"></i></button>
+  </td>
+  <td>
+
+  </td>
+</tr>
 
   </table>
-  <div class="panel">
-    <h2 id="mainTitle" ></h2>
-    <div class="arrow left"><i class="glyphicon glyphicon-chevron-left"></i>
+
+  <!-- Modal -->
+
+  <div class="modal" id="modal-one">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h2>Help</h2>
+        <a href="#" class="btn-close">×</a>
+        <!--CHANGED TO "#close"-->
+      </div>
+      <div class="modal-body">
+        <p>Move your mouse to move around.</p>
+        <p>Scroll or pinch to zoom.</p>
+        <p>Mouse Click to pause.</p>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn">OK</a>
+        <!--CHANGED TO "#close"-->
+      </div>
     </div>
-    <span id="mainBody" ></span>
   </div>
-  <div id="msg">msg</div>
-  <script>
-  // ☰
-  cc = function(a) {
-    console.log(a)
-  }
-  var canvas1 = document.getElementById("canvas-map")
-    // var moveLeft  = document.getElementById("buttonLeft")
-    // var moveRight = document.getElementById("buttonRight")
-    // var moveUp    = document.getElementById("buttonUp")
-    // var moveDown  = document.getElementById("buttonDown")
-  var ctx = canvas1.getContext("2d")
-  canvas1.width = innerWidth;
-  canvas1.height = innerHeight * 2 / 3;
-  var centerX = canvas1.width / 2,
-    centerY = canvas1.height / 2,
-    π = Math.PI,
-    τ = 2 * π,
-    sqrt = Math.sqrt,
+<canvas id="canvas1"></canvas>
+
+</header>
+
+<script>
+function cc(a){console.log(a)}
+  //var fb = new Firebase("https://boiling-torch-4238.firebaseio.com");
+  //var fbUser = new Firebase("https://boiling-torch-4238.firebaseio.com/user");
+
+  /*fbUser.on("child_added", function(snapshot) {
+    var newPlayer = snapshot.val();
+    //color = newRandomRGB()
+    aa.push( { x:newPlayer.x, y:newPlayer.y, name:newPlayer.name, color:"rgb(1,2,3)" } )
+  });
+  */
+
+
+
+// // save data
+// fb.set([1,2,3])
+// fb.push(xy:{ x:12, y:22 })
+// fb.push({user:{ x:12, y:22 } })
+// var fbID = fb.set({ar:[11,22,33]})
+// console.log( fbID.key() )
+// console.log( fb.child(fbID.key()) )
+// fb.child("arr").push({x:11,y:22})
+// console.log(fb.child("arr").length)
+
+//    fb.child("arr").set({ arr:[1,2,3] });
+// // fb.child("arr")set({ name: "Alex Wolfe",arr:[] });
+// // update in real time
+// // fb.child("arr").push(111)
+
+// aa = []
+
+// fb.child("user").on("value", function(snapshot) {
+//   cc("changed")
+//   console.log(snapshot.val());  // Alerts "San Francisco"
+//   // aa.push( snapshot.val() )
+//   cc("aa "+aa)
+// });
+// fb.child("user").push({ x:11, y:22, name:"dre"}) //color: newRandomRGB()
+// fb.child("user").push({ x:121,y:222,name:"mat"})
+
+
+// fb.on('child_added', function(snapshot) {
+//   var update = snapshot.val();
+//   Larlyns_Array.push({x: update.x, y:update.y})
+//   console.log(Larlyns_Array)
+// });
+
+// fb.child("bombs").on("value", function(snapshot) {
+//   cc("snapshot: "+snapshot.val());  // Alerts "San Francisco"
+// });
+
+// localarray1=[]
+
+// fb.on("value", function(snapshot) {
+//   localarray1 = snapshot.val()
+//   // cc("localarray1:")
+//   console.log("here: "+localarray1);
+// }, function (errorObject) {
+//   console.log("The read failed: " + errorObject.code);
+// });
+
+// cc("local: "+localarray1)
+// fb.on("value", function(data) {
+//   var arr = data.val() ? data.val().arr : "";
+//   alert("My arr is " + arr);
+// });
+
+
+help_dialog=0
+pi2= 2*Math.PI
+angleX=50
+//∅
+
+
+
+var canvas1 = document.getElementById("canvas1"),
+    msg3 = document.getElementById("msg3"),
+    t = canvas1.getContext("2d"),
+    pi=Math.PI,
+    start=0;
     cos = Math.cos,
-    sin = Math.sin,
-    rnd = Math.round,
-    fps = 10,
-    timer = 0,
-    eye = 200,
-    scale = 1,
-    // rotation counters
-    ix = 60,
-    iy = 60,
-    iz = 60,
-    // rotation target values at end of rotation
-    degIncr = π / 6 / fps, //30degrees rotated in 1 second @30fps
-    incrX = degIncr / 3,
-    incrY = degIncr / 3, //target
-    zoomIncr = 1 / fps,
-    incrZ = zoomIncr,
-    zMin = .1,
-    totalx = 0,
-    totaly = 0,
-    totalz = 0,
-    mouseX = 0,
-    mouseY = 0;
-  canvas1.onmousemove = function(d) {
-    mouseX = d.clientX;
-    mouseY = d.clientY
-  }
+    sin = Math.sin;
+    max = Math.max;
+    min = Math.min;
+    round = Math.round;
+    floor = Math.floor;
+document.body.style.margin = 0;
+canvas1.width = innerWidth-10;
+canvas1.height = innerHeight-10;
+var f = 200,
+    w2 = canvas1.width / 2,
+    h2 = canvas1.height / 2,
+    w5 = canvas1.width / 5,
+    h5 = canvas1.height / 5,
+    w2_5 =  canvas1.width  * 2 / 5,
+    w3_5 =  canvas1.width  * 3 / 5,
+    h2_5 =  canvas1.height * 2 / 5,
+    h3_5 =  canvas1.height * 3 / 5,
+    rotateSpeed=1/20000,
+    maxX=0,
+    p = [],
+    mX = 0,
+    mY = 0,
+    loop=0,
+    delay=1000/30,
+    time=0,
+    max_z=0, //max height of all
+    min_z=0, //min height of all
+    zoom=4.8,
+    totalRotation = getRotationMatrix(-pi/4,mY),//initialise rot. matrix with 0 rotation
+    end_variables;
+document.getElementById("buttonUp").onclick=moveUP10
+document.getElementById("buttonDown").onclick=moveDOWN10
+document.getElementById("buttonLeft").onclick=moveLEFT10
+document.getElementById("buttonRight").onclick=moveRIGHT10
+document.getElementById("buttonZoomIn").onclick= function(){ zoom *= 1.1; draw(); offTimer};
+document.getElementById("buttonZoomOut").onclick= function(){ zoom /= 1.1; draw(); offTimer};
+document.getElementById("buttonHome").onclick= function(){ centre_planes(); draw();offTimer};
 
-  function toggleTimer() {
-      if (timer === 0) {
-        timer = setInterval(main, fps)
+// disable scroll Stack overflow: http://stackoverflow.com/questions/4770025/how-to-disable-scrolling-temporarily
+function disable_scroll() {
+  if (window.addEventListener) {
+      window.addEventListener('DOMMouseScroll', wheel, false);
+  }
+  window.onmousewheel = document.onmousewheel = wheel;
+}
+function preventDefault(e) {
+  e = e || window.event;
+  if (e.preventDefault)
+      e.preventDefault();
+  e.returnValue = false;
+}
+
+function wheel(e) {
+  preventDefault(e);
+}
+disable_scroll()
+//-----------------------------------------------------------------
+
+function toggleTimer() {
+
+    if (loop === 0) {
+      loop = setInterval(draw, delay);
+    }
+  } // make sure timer is on
+
+function offTimer() {
+
+    clearInterval(loop);
+    loop = 0
+  } // make sure timer is off
+
+canvas1.onmousemove = function(a) {
+
+  mX = a.clientX;
+  mY = a.clientY
+  outerX = (mX < w2_5) || (mX > w3_5)
+  outerY = (mY < h2_5) || (mY > h3_5)
+  mmY = (outerX) ? h2 : mY;
+  mmX = (outerY) ? w2 : mX;
+  stopXY = ((!outerX) && (!outerY))
+  if (!stopXY && outerX && outerY || stopXY) {
+    drawMseBox(outerX, outerY, stopXY)
+    offTimer()
+    draw()
+  } else {
+    toggleTimer()
+  }
+};
+
+canvas1.onclick = function (d) {
+
+  if ((stopXY)) centre_planes() //mouse is in centre square
+  else{
+  if(loop){//drawLines()
+    clearInterval ( loop );
+    loop=0;("freeze")
+  }
+  else{
+    loop=setInterval(draw, delay);
+  }
+  }
+}
+
+canvas1.onmousewheel = function (e) {// chrome only
+
+    if        (e.wheelDelta > 0) {  zoom *= 1.06;}
+    else if   (e.wheelDelta < 0) {  zoom /= 1.06;   }
+    draw()
+};
+
+
+function fn1(x,y) {
+
+	var mag=Math.sqrt(x*x+y*y)||1;
+	return 40*sin(mag)/mag
+}
+
+function fn1a(x, y) {
+
+  var xShift = [12, 13, -11, 15, 13],
+    yShift = [10, -14, -12, -16, 2],
+    coeff = [110, 80, 80, 60, 80],
+    sum = 0,
+    i = xShift.length
+  while (i--) {
+    x1 = x + xShift[i];
+    y1 = y + yShift[i];
+    mag = Math.sqrt(x1 * x1 + y1 * y1);
+    sum = sum + coeff[i] * sin(mag) / mag
+  }
+  return sum
+}
+
+function makeGrid (fn) {
+
+  var p       = [],
+    count     = 0,
+    point,
+    old_point = { z: 0 },
+    grd       = 10,
+    step      = .5,
+    r, g, b,
+    height,
+    seaLevel = 0, // higher is deeper
+    snowLevel = -15; //lower is higher
+  g2 = Math.floor(grd / step * 2) + 1, // number of points in row
+  g1 = g2 - 1; //length of drawn line in squares
+  for (var x = -grd; x <= grd; x += step)
+    for (var y = -grd; y <= grd; y += step) {
+      var z = fn(x, y);
+      if (z) max_z = round(max(z, max_z));
+      if (z) min_z = round(min(z, min_z));
+      height = (z > seaLevel) ? 0 : z;
+      //add shadow:
+      sun = (height - old_point.z) * 10 /step;
+      rgb = colorize(z, seaLevel, snowLevel, sun);
+      r = rgb[0];
+      g = rgb[1];
+      b = rgb[2];
+
+      height_color = "rgb(" + r + "," + g + "," + b + ")";
+      point = {
+        color: height_color,
+        x: x * 10,
+        y: y * 10,
+        z: height,
+        x0: x * 10,
+        y0: y * 10,
+        z0: height,
+        r: r,
+        g: g,
+        b: b,
+        sun: sun,
+        count: count++
       }
-    } //turn animation on if it is off
-  document.getElementById("buttonRight").onclick = function() {
-    if (ix && incrX > 0) return null // disallaw if buttonLeft is active
-    incrX = -degIncr;
-    ix += fps;
-    toggleTimer()
-  }
-  document.getElementById("buttonLeft").onclick = function() {
-    if (ix && incrX < 0) return null
-    incrX = degIncr;
-    ix += fps;
-    toggleTimer()
-  }
+      p.push(point);
+      old_point = point;
+    }
+      document.getElementById("msgtop2").innerHTML = p.length
 
-  document.getElementsByClassName("panel")[0].onclick = function() {
-    if (ix && incrX < 0) return null
-    incrX = degIncr;
-    ix += fps;
-    toggleTimer()
-  }
-  document.getElementById("buttonDown").onclick = function() {
-    if (iy && incrY > 0) return null // d
-    incrY = -degIncr;
-    iy += fps;
-    toggleTimer()
-  }
-  document.getElementById("buttonUp").onclick = function() {
-    if (iy && incrY < 0) return null
-    incrY = degIncr;
-    iy += fps;
-    toggleTimer()
-  }
-  document.getElementById("buttonZoomOut").onclick = function() {
-    if (iz && incrZ > 0) return null // d
-    incrZ = -zoomIncr;
-    iz += fps;
-    toggleTimer()
-  }
-  document.getElementById("buttonZoomIn").onclick = function() {
-    if (iz && incrZ < 0) return null
-    incrZ = zoomIncr;
-    iz += fps;
-    toggleTimer()
-  }
-  //------------------------------------------------------------------------------
-  function sinc(x, y) {
-    //y += 10
-    var mag = sqrt(x * x + y * y)
-    var res = -60 * (sin(mag) / mag || 1)
-    if (mag === 0)
-      res = -60
-    return res
-  }
+  return p
+};
 
-  function terr(x, y) {
-    return sinc(x, y) + sinc(x + -3, y + -1) + sinc(x - -1, y + -3)
-  }
+function colorize(z, seaLevel, snowLevel, sun) {
 
-  function makeGrid(gridSize) {
-    var ix, iy, z, tic = +new Date(),
-      grid = [],
-      count = 0,
-      endValue = 10, // actual value of end  point
-      nPoints = gridSize * 3 + 1, // 1/2 points not including 0
-      rowLength = nPoints * 2 + 1,
-      stretch = endValue / nPoints,
-      fillView = 100 / nPoints //100px either side of centre
-    for (iy = -nPoints; iy <= nPoints; iy++)
-      for (ix = -nPoints; ix <= nPoints; ix++) {
-        z = terr(ix * stretch, iy * stretch)
-        var pp = {
-          count: count++,
-          x: ix * fillView,
-          y: iy * fillView,
-          z: z,
-          h: (z < 0) ? 0 : z,
-          _x: 0,
-          _y: 0,
-          detail: 0
-        }
-        grid.push(pp)
+  var r, g, b;
+
+  r = -z + 10,
+  g = -z + 30,
+  b = -z + 10; // green hills
+  if (z < snowLevel) {
+    r = 180 - z * 2,
+    g = 180 - z * 2,
+    b = 180 - z * 2;
+  } //tallest==white
+  if (z > seaLevel) {
+    r = 255 - z * 3,
+    g = 255 - z * 2,
+    b = 255 - z / 2 + 100;
+  } //ocean=blue
+
+  r = r + sun;
+  g = g + sun;
+  b = b + sun;
+  r = (r > 255) ? 255 : r;
+  g = (g > 255) ? 255 : g;
+  b = (b > 255) ? 255 : b;
+  r = (r < 0) ? 0 : r;
+  g = (g < 0) ? 0 : g;
+  b = (b < 0) ? 0 : b;
+  r = round(r);
+  g = round(g);
+  b = round(b);
+
+  return [r, g, b]
+}
+
+
+
+function vertice_txt(p,b){
+
+	var oldfont=t.font;t.font = 'italic 20px Calibri';//t.font = "30pt Arial";
+	t.fillStyle = "red";
+	var txt= 'n,x,y: ' + 	b +' ('+p[b].x0+' '+p[b].y0 +')' //
+	var txt= '('+ p[b].x0+' , '+p[b].y0 +')' //
+	var txt= (p[b].z0)? Math.round(p[b].z0):'No'
+	var txt= 'x: '+ p[b].x  //
+	//var txt= '_y: '+ Math.round(p[b].sun)  //
+	t.fillText(txt, p[b]._x, p[b]._y)//vertice coord.
+	t.font = oldfont
+}
+
+function drawFPS(start,delaytime){
+  var startDraw = +new Date()
+	var g1=g2-1;
+	var oldfont=t.font;
+	var original_color=t.fillStyle;
+	t.fillStyle = "black";
+    var end = +new Date();
+    var time = "main loop time(ms): " + (end-start);
+    var delaytime2 = "between loop time(ms): " + (delaytime-(end-start));
+    var nPoints = "no. of Points: " + p1.length
+    var nSquares="no. of squares: " + g1*g1
+    var gg='g1: ' + g1 + '	g2: ' + g2 + '   g2*g2: ' + g2*g2
+    var lastPoint= 'max_z: ' + max_z+ '     min_z: ' + min_z
+    var zm = 'zoom:' +zoom.toPrecision(2);
+    var txt = [
+    	'?',
+    	'Debug:',
+    	time,
+    	delaytime2,
+    	nPoints,
+    	nSquares,
+    	gg,
+    	lastPoint,
+    	zm
+    ]
+    var txt = [
+      'Move mouse to rotate',
+    	'arrow keys to move',
+    	'Click mouse button to freeze',
+  		'Scroll mouse wheel to zoom in/out',
+    	'',
+    	'works best in Chrome',
+  		'slow in FireFox'
+    			]
+    var txt = [
+    	'?',
+    	'Debug:',
+    	time,
+    	delaytime2,
+    	nPoints,
+    	nSquares,
+    	gg,
+    	lastPoint,
+    	zm
+    ]
+    t.font = 'italic 20px Calibri';    //		t.font = "60px sans-serif";
+    var end1=txt.length
+    while(end1--){
+    	t.fillText(txt[end1], 100, 300+end1*20);
+    }
+    t.font = oldfont
+   	t.fillStyle = original_color;
+}
+//------------------------------------------------------------------------------
+
+function drawMseBox(outerX, outerY, stopXY) {
+    var old_linewidth = t.lineWidth;
+    var large = 36,
+      small = 0.5
+    t.lineWidth = (old_linewidth < small) ? small : (old_linewidth > large) ? large : old_linewidth
+    var original_color = t.strokeStyle;
+    t.strokeStyle = 'grey';
+    t.fillstyle = 'white';
+    msg3.innerHTML = ''
+    t.font = '80px Calibri'; //    t.font = "60px sans-serif";
+    if ((stopXY)) { //centre square
+      t.strokeRect(w2_5, h2_5, w5, h5)
+      msg3.innerHTML = '<i class="fa fa-stop"></i>'
+    } else if ((!outerX) || (!outerY)) {
+      if (!outerX) {
+        t.strokeRect(w2_5, 0, w5, canvas1.height);
+        msg3.innerHTML = '<i class="fa fa-arrows-v"></i>'
       }
-    document.getElementById("msg2").innerHTML = ("create:<br>" + (+new Date() - tic))
-    cc("rowLength " + rowLength)
-    cc("grid.length " + grid.length)
-    cc("grid.length/4 " + grid.length / 4)
-    cc("grid.length/4 " + Math.sqrt(grid.length / 4))
-    return {
-      grid: grid,
-      rowLength: rowLength,
-      fn: terr,
-      stretch: stretch,
-      fillView: fillView,
-      createGridTime: (+new Date() - tic)
-    }
-  }
-
-  function adjustShore(plane, factor) {
-    /*      3 . 2 . 9
-            . . . . .
-            4 . 1 . 8
-            . . . . .
-            5 . 6 . 7
-    */
-    var ix, iy, p1, i1, i2, i3, i4, i5, i6, i7, i8, i9, grid = plane.grid,
-      fn = plane.fn,
-      rowLength = plane.rowLength,
-      stretch = plane.stretch,
-      fillView = plane.fillView,
-      abs = Math.abs,
-      ddx = Math.abs(grid[1].x - grid[0].x),
-      ddy = Math.abs(grid[1].y - grid[0].y),
-      minxy = Math.max(abs(ddx), abs(ddy)),
-      minDistance = Math.sqrt(ddx * ddx + ddy * ddy) || minxy
-    for (iy = 1; iy < rowLength - 1; iy += 1)
-      for (ix = 1; ix < rowLength - 1; ix += 1) {
-        i1 = ix + iy * rowLength
-        i2 = i1 - rowLength
-        i3 = i1 - rowLength - 1
-        i4 = i1 - 1
-        i5 = i1 + rowLength - 1
-        i6 = i1 + rowLength
-        i7 = i1 + rowLength + 1
-        i8 = i1 + 1
-        i9 = i1 - rowLength + 1
-        p1 = grid[i1]
-        if (
-          (p1.z * grid[i2].z) < 0 ||
-          (p1.z * grid[i3].z) < 0 ||
-          (p1.z * grid[i4].z) < 0 ||
-          (p1.z * grid[i5].z) < 0 ||
-          (p1.z * grid[i6].z) < 0 ||
-          (p1.z * grid[i7].z) < 0 ||
-          (p1.z * grid[i8].z) < 0 ||
-          (p1.z * grid[i9].z) < 0
-        ) {
-          secantMethod2(p1, fn, minDistance, stretch, fillView, factor)
-        } else {}
+      if (!outerY) {
+        t.strokeRect(0, h2_5, canvas1.width, h5);
+        msg3.innerHTML = '<i class="fa fa-arrows-h"></i>'
       }
-  }
+    } else { //outer 4 quadrants
+      msg3.innerHTML = '<i class="fa fa-stop"></i>'
+    }
+    t.lineWidth = old_linewidth //t.strokeStyle=original_color;
+  } //drawMseBox
 
-  function directionAscent(x, y, fn) {
-    var tiny = 1e-7,
-      PI = Math.PI,
-      abs = Math.abs,
-      y0 = fn(x, y),
-      y1 = fn(x + tiny, y),
-      y2 = fn(x, y + tiny),
-      dx = y1 - y0,
-      dy = y2 - y0,
-      mag = Math.sqrt(dx * dx + dy * dy),
-      // the angle is not needed but ...
-      angle = Math.atan(abs(dy / dx))
-    if (dx > 0 && dy > 0) { //I
-      angle = angle
-    } else if (dx < 0 && dy > 0) { //II
-      angle = PI - angle
-    } else if (dx < 0 && dy < 0) { //III
-      angle = PI + angle
-    } else if (dx > 0 && dy < 0) { //IV
-      angle = -angle
-    }
-    return [dx / mag, dy / mag, angle /* radians */ ]
-  }
 
-  function secantMethod2(p1, fn, minDistance, stretch, fillView, factor) { //fast,
-    /* fn(x,y)
-      finds zeros between t.p.
-    */
-    var z0, z1, dx, dy, x, x1, y1, distMoved,
-      x0 = p1.x / fillView * stretch,
-      y0 = p1.y / fillView * stretch,
-      x00 = x0,
-      y00 = y0,
-      count = 0,
-      maxIter = 20, // usually 8 iter stop
-      dir = directionAscent(x0, y0, fn), // [dx,dy,angle]
-      dx = dir[0] / 1000,
-      dy = dir[1] / 1000,
-      dydx = dir[1] / dir[0],
-      x1 = x0 + dx,
-      y1 = y0 + dy,
-      z0 = 0
-    while (maxIter-- && x1 !== x0) {
-      z0 = fn(x0, y0)
-      z1 = fn(x1, y1)
-      x = x1 - z1 * (x1 - x0) / (z1 - z0)
-      x0 = x1
-      y0 = y1
-      x1 = (isNaN(x)) ? x0 : x
-      y1 = (x - x00) * dydx + y00
-    }
-    dx = x1 - x00
-    dy = y1 - y00
-    distMoved = Math.sqrt(dx * dx + dy * dy)
-    if (distMoved < minDistance / factor && (typeof z1 != 'undefined')) {
-      p1.x = x1 * fillView / stretch
-      p1.y = y1 * fillView / stretch
-      p1.z = z1
-      p1.detail = 1
-      p1.h = (z1 < 0) ? 0 : z1
-    } else {
-      return false
-    }
-    return x0
-  }
 
-  function main() {
-    var tic = +new Date()
-    if (ix) {
-      ix--;
-      totalx += incrX
-    }
-    if (iy) {
-      iy--;
-      totaly += incrY
-    }
-    if (iz) {
-      iz--;
-      totalz += incrZ;
-      if (totalz < zMin) totalz = zMin
-    }
-    if (ix < 1 && iy < 1 && iz < 1) { // check all animation increment countdowns
-      clearInterval(timer);
-      timer = 0
-      showTitle()
-    }
-    world.forEach(rotate)
-    draw(world[0])
-      //writeNumbers(world[0])
-    document.getElementById("msg1").innerHTML = ("ms</br>" + (+new Date() - tic))
-  }
 
-  function rotate(plane) {
-    var x, y, z, x1, y1, z1, pnt, scale,
-      grid = plane.grid, //grid
-      rowLength = plane.rowLength,
-      cosθx = cos(totalx),
-      sinθx = sin(totalx),
-      cosθy = cos(totaly),
-      sinθy = sin(totaly),
-      ip = grid.length;
-    while (ip--) {
-      pnt = grid[ip] //global
-      x = pnt.x
-      y = pnt.y
-      z = pnt.z
-      x1 = x * cosθx - y * sinθx //rotate in xy
-      y1 = x * sinθx + y * cosθx
-      y = y1
-      y1 = y * cosθy - z * sinθy //rotate in yz
-      z1 = y * sinθy + z * cosθy
-      scale = totalz / (1 - z1 / eye) // zoom = totalz
-      pnt._x = centerX + x1 * scale
-      pnt._y = centerY + y1 * scale
-    }
-  }
-  initialRun = 1
 
-  function draw(plane) {
-      var ix, iy, p1, p2, p3, p4, i1, i2, i3, i4, p12, p14, p23, p34, pMid,
-        grid = plane.grid,
-        rowLength = plane.rowLength,
-        skip = 2, // make sure it is divisible
-        r2 = rowLength * skip
-        /*      3 . 2           3  23   2
-                . M .          34  Mi  12
-                4 . 1           4  14   1
-        */
-      ctx.clearRect(0, 0, canvas1.width, canvas1.height);
-      for (iy = skip; iy < rowLength; iy += skip)
-        for (ix = skip; ix < rowLength; ix += skip) {
-          i1 = ix + iy * rowLength
-          i2 = i1 - r2
-          i3 = i1 - r2 - skip
-          i4 = i1 - skip
-          p1 = grid[i1]
-          p2 = grid[i2]
-          p3 = grid[i3]
-          p4 = grid[i4]
-          p12 = grid[(i1 + i2) / 2]
-          p14 = grid[(i1 + i4) / 2]
-          p23 = grid[(i3 + i2) / 2]
-          p34 = grid[(i3 + i4) / 2]
-          pMid = grid[(i3 + i1) / 2]
-          if (!p1.details) {
-            //ctx.strokeStyle = "grey";
-            ctx.fillStyle = p1.color;
-            ctx.beginPath();
-            ctx.moveTo(p1._x, p1._y)
-            ctx.lineTo(p12._x, p12._y)
-            ctx.lineTo(p2._x, p2._y)
-            ctx.lineTo(p23._x, p23._y)
-            ctx.lineTo(p3._x, p3._y)
-            ctx.lineTo(p34._x, p34._y)
-            ctx.lineTo(p4._x, p4._y)
-            ctx.lineTo(p14._x, p14._y)
-            ctx.lineTo(p1._x, p1._y)
-            ctx.fill();
-          }
-          //ctx.closePath();
-          if (initialRun &&
-            p12.detail ||
-            p14.detail ||
-            p23.detail ||
-            p34.detail ||
-            pMid.detail
-          ) {
-            p1.detail = 1
-          }
-          //ctx.stroke()
-          if (p1.detail) {
-            //ctx.strokeStyle = "grey";
-            ctx.fillStyle = p1.color;
-            ctx.beginPath();
-            ctx.moveTo(p1._x, p1._y)
-            ctx.lineTo(p12._x, p12._y)
-            ctx.lineTo(pMid._x, pMid._y)
-            ctx.lineTo(p14._x, p14._y)
-            ctx.closePath();
-            //ctx.stroke()
-            ctx.fill()
-            ctx.beginPath();
-            ctx.fillStyle = p12.color;
-            ctx.moveTo(p12._x, p12._y)
-            ctx.lineTo(p2._x, p2._y)
-            ctx.lineTo(p23._x, p23._y)
-            ctx.lineTo(pMid._x, pMid._y)
-            ctx.closePath();
-            //ctx.stroke()
-            ctx.fill()
-            ctx.beginPath();
-            ctx.moveTo(pMid._x, pMid._y)
-            ctx.fillStyle = pMid.color;
-            ctx.lineTo(p23._x, p23._y)
-            ctx.lineTo(p3._x, p3._y)
-            ctx.lineTo(p34._x, p34._y)
-            ctx.closePath();
-            //ctx.stroke()
-            ctx.fill()
-            ctx.beginPath();
-            ctx.fillStyle = p14.color;
-            ctx.moveTo(p14._x, p14._y)
-            ctx.lineTo(pMid._x, pMid._y)
-            ctx.lineTo(p34._x, p34._y)
-            ctx.lineTo(p4._x, p4._y)
-            ctx.closePath();
-            //ctx.stroke()
-            ctx.fill()
-          } //if p1.detail
-        } //for
-      initialRun = 0
-    } //function
-  function writeNumbers(plane) {
-    var grid = plane.grid,
-      i = grid.length
-    while (i--) {
-      p1 = grid[i]
-        //if(p1.x===0)
-      ctx.fillStyle = "black"
-      ctx.fillText(p1.count, p1._x, p1._y)
-      ctx.fillStyle = "white"
-      ctx.fillText(p1.count, p1._x + 1, p1._y + 1)
-    }
-  }
-  onkeydown = function(e) {
-    //alert('I work!!' + 'you pressed keyCode: ' + e.keyCode)
-    //js1k eye of beholder
-    // if this is a keydown event, keyDOWN gets the value 1, otherwise 0
-    //cc("e:"+e.keyCode)
-    var keyDOWN = e.type[5] ? 1 : 0,
-      key = e.keyCode
-    if (key === 37) moveLEFT()
-    if (key === 39) moveRIGHT()
-    if (key === 38) moveUP()
-    if (key === 40) moveDOWN()
-  }
 
-  function move_planes(x, y) {
-    for (var nP = 0; nP < world.length; nP++) {
-      var p = world[nP].grid; //grab next plane from array
-      var p1 = p.length;
-      while (p1--) {
-        p[p1].x += x;
-        p[p1].y += y;
+
+function initialise_draw(){
+
+	//globals:
+	start 	= +new Date();
+	outerX=(mX<w2_5)||(mX>w3_5)
+	outerY=(mY<h2_5)||(mY>h3_5)
+	mmY=(outerX)? h2:mY;
+	mmX=(outerY)? w2:mX;
+	stopXY=((!outerX)&&(!outerY))
+//end globals:
+	if ((stopXY)) {	mmX=w2;mmY=h2	}
+    t.clearRect(0, 0, canvas1.width, canvas1.height);
+}
+
+function rotatePoints(p,totalRotation){
+
+	var h = (mmX - w2)*rotateSpeed,
+		j = cos(h),
+		l = sin(h),
+		g = (mmY - h2)*rotateSpeed,
+		i = cos(g),
+		k = sin(g),
+		x=0,y=1,z=2,
+		a, e, d,a1,
+		new_rotation,
+		totalRotation;
+	new_rotation = getRotationMatrix(g,h);
+	totalRotation = m3_x_m3(new_rotation,totalRotation);
+	for (var b = p.length; b--;) {
+		a = p[b]; //a is the point
+		a1 = m3_x_v3(totalRotation,[a.x, a.y, a.z]);
+		e = zoom*f / (f + a1[z]);
+		a._x = w2 + a1[x] * e;
+		a._y = h2 + a1[y] * e;
+	}
+	return totalRotation
+}
+
+function q(pt,i,middle) {
+
+	/*
+	white 255,255,255
+	black   0,  0,  0
+			r,	g,	b
+	*/
+	var p1=pt[i],
+		p2=pt[i+1],
+		p3=pt[i+1+g2],
+		p4=pt[i+g2],d=0;
+		//(typeof p1 === 'undefined')	? console.log('count: _' )
+									//: console.log('count: ' + p1.count + ' p1  x: ' + p1.x0 +' y: '+ p1.y0+ ' color: ' + p1.color);
+		var ii=i+1;
+		if((ii%g2)){//if not the end of the line...draw a square
+			t.fillStyle = p1.color;
+			//g2*(g1-1) top right
+			//g1 bottom left
+			if (p1.count<100) {
+        // cc( "p1.count")
+        // cc(p1.count)
+        false;
+        //t.fillStyle = 'red'
       }
-    } //end moving all planes
-  }
+			if (middle) t.fillStyle = 'green'
+			//if ((p1.x0<0)&&(p1.x0>-1)) t.fillStyle = 'red'
+			try{
+			t.beginPath();
+			t.moveTo(p1._x, p1._y);
+			t.lineTo(p2._x+d, p2._y);
+			t.lineTo(p3._x+d, p3._y);
+			t.lineTo(p4._x, p4._y);
+			t.lineTo(p1._x, p1._y);
+			t.fill();
+			///*
+			//	L-shape outline
+			t.strokeStyle = "grey";
+        	//t.lineWidth = 1//p1._y/2000*zoom;
+        	t.beginPath();
+			t.moveTo(p1._x, p1._y);
+			t.lineTo(p2._x, p2._y);
+			t.lineTo(p3._x, p3._y);
+			//t.lineTo(p4._x, p4._y);
+			//t.lineTo(p1._x, p1._y);
+			t.stroke()
+			//*/
+			} catch (q) {}
+		}
+        // t.fillText( +new Date(),100,280);//FF
 
-  function moveUP() {
-    move_planes(0, 1);
-    draw(world[0]);
-    toggleTimer()
-  }
 
-  function moveDOWN() {
-    move_planes(0, -0.7);
-    draw(world[0]);
-    toggleTimer()
-  }
+}
 
-  function moveRIGHT() {
-    move_planes(0.7, 0);
-    draw(world[0]);
-    toggleTimer()
-  }
+function getRotationMatrix(a,b){           // return the rotation matrix from X,Y angles
 
-  function moveLEFT() {
-    move_planes(-0.7, 0);
-    draw(world[0]);
-    toggleTimer()
-  }
+	var angleX,angleY,
+		A = Math.cos(a),
+		B = Math.sin(a),
+		C = Math.cos(b),
+		D = Math.sin(b);
+	if (B>0){//sinX is positive
+				if(A>0){//cosX is positive
 
-  function addColor(plane) {
-    var ix, iy, p1, i1, i2, i3, i4, avz,
-      grid = plane.grid,
-      rowLength = plane.rowLength,
-      skip = 1, // make sure it is divisible
-      r2 = rowLength * skip,
-      snowLevel = 100
-    for (iy = skip; iy < rowLength; iy += skip)
-      for (ix = skip; ix < rowLength; ix += skip) {
-        i1 = ix + iy * rowLength
-        i2 = i1 - r2
-        i3 = i1 - r2 - skip
-        i4 = i1 - skip
-        avz = (grid[i1].z + grid[i2].z + grid[i3].z + grid[i4].z) / 4 || 0
-        grid[i1].debug = [i1, i2, i3, i4, grid[i1].z, grid[i2].z, grid[i3].z, grid[i4].z]
-          //if(grid[i1].x===0)cc(grid[i1].count)
-        grid[i1].color = colorize(avz, snowLevel, grid[i1], plane.fn, plane.fillView, plane.stretch)
-      }
-  }
+				}
+	}
+/*
+         |  CE      -CF      -D  |
+    M  = | -BDE+AF  -BDF+AE  -BC |
+         |  ADE+BF  -ADF+BE   AC |
 
-  function colorize(z, snowLevel, p1, fn, fillView, stretch) {
-    var r, g, b,
-      seaLevel = 0,
-      round = Math.round,
-      x = p1.x / fillView * stretch,
-      y = p1.y / fillView * stretch,
-      tiny = 0.000001,
-      z0 = fn(x, y),
-      z1 = fn(x, y - tiny),
-      dz = z1 - z0,
-      dx = tiny, //* 1.41421356237,
-      sun = dz / dx * 12
-    r = -z + 30
-    g = -z + 45
-    b = -z + 30 // green hills
-    if (z > snowLevel) {
-      r = 180 - z * 2
-      g = 180 - z * 2
-      b = 180 - z * 2
-    } //tallest==white
-    if (z < seaLevel) {
-      r = 255 + z * 3
-      g = 255 + z * 2
-      b = 255 + z / 2 + 100
-    } //ocean=blue
-    if (z > seaLevel) {
-      r = r + sun;
-      g = g + sun;
-      b = b + sun;
-    }
-    r = (r > 255) ? 255 : r;
-    g = (g > 255) ? 255 : g;
-    b = (b > 255) ? 255 : b;
-    r = (r < 0) ? 0 : r;
-    g = (g < 0) ? 0 : g;
-    b = (b < 0) ? 0 : b;
-    r = round(r);
-    g = round(g);
-    b = round(b);
-    p1.avz = z
-    return "rgb(" + r + "," + g + "," + b + ")"
-  }
+    A       = cos(angle_x);
+    B       = sin(angle_x);
 
-  function showStuff(plane) {
-    var grid = plane.grid
-    for (var i = 0; i < grid.length; i++) {
-      var p = grid[i]
-        //if(p.x===0){
-      if (p.x === p.y)
-        cc("________________")
-      cc("i:" + i + " x:" + p.x + " y:" + p.y + " color:" + p.color + " avz:" + p.avz)
-      cc("z: " + p.z)
-        //}
-    }
-  }
+    C       = cos(angle_y);
+    D       = sin(angle_y);
 
-  function zeroSea(plane) {
-    var grid = plane.grid,
-      p
-    for (var i = 0; i < grid.length; i++) {
-      p = grid[i]
-      if (p.z < 0) p.z = 0
-    }
-  }
-  var titlePage = 0
-  var panelColors = ["#CCE0EB", "  #99C2D6", "#66A3C2", "#3385AD", "#006699"]
-var panelTitles =[ "ABOUT", "PROJECTS", "PROJECTS", "CONTACT", ]
-var panelBodies =[
-  "I am a full-stack Ruby on Rails Web-Developer",
-  "<h3>Bike Tracker</h3><p>An App made with Andre and Michael.  I created the 3D visualisation and interface with Google Maps</p>",
-  "<h3>Angular Game</h3>A game created using Angular.  You are looking at the 3D engine now",
-  "The fastest way to get a response from me is to send me an email. I will try to respond to your email in less than 24 hours.<p>vasko.traikovski@gmail.com</p>", ]
-  function showTitle() {
+    E       = cos(angle_z); = 1 ... no rotation in z for this game
+    F       = sin(angle_z); = 0
 
-    if (titlePage > 3)
-      titlePage = 0
-    var title = document.getElementById("mainTitle");
-    var main = document.getElementById("mainBody");
-    title.innerHTML = ( panelTitles[titlePage] ); //"#D93600"
-    main.innerHTML = ( panelBodies[titlePage] ); //"#D93600"
-    //title.style.backgroundColor = panelColors[titlePage];
-    title.style.color = panelColors[titlePage];
-    titlePage++
-    //0099CC
-  }
-  var terrain = makeGrid(15)
-  cc("time create " + terrain.createGridTime)
-    //if(terrain.createGridTime>20 ) terrain = makeGrid(40)
-    // if(terrain.createGridTime>15 ) terrain = makeGrid(6)
-  world = [terrain]
-  terrainDetail = makeGrid(10)
-  adjustShore(world[0], 10)
-  addColor(world[0])
-  zeroSea(world[0])
-    //showStuff(world[0])
-  toggleTimer()
-  //document.getElementById("msg2").innerHTML= ( "p1._x "+ Math.round(p1._x) )
-  </script>
-</body>
+         |  C    0  -D  |
+    M  = | -BD   A  -BC |
+         |  AD   B   AC |
 
+         |   Cx  +0y   -Dz |
+    MV = | -BDx  +Ay  -BCz |
+         |  ADx  +By   ACz |
+
+          	|x2|  |  cosY.x 			    - sinY.z  		|
+V2 = MV = 	|y2|  | -sinX.sinY.x + cosX.y - sinX.cosY.z 	|
+     		|z2|  |  cosX.sinY.x + sinX.y + cosX.cosY.z 	|
+*/
+  return [
+   C,      0,  -D,
+  -B * D,  A,  -B * C,
+   A * D,  B,   A * C
+  ]
+}
+//------------------------------------------------------------------------------
+
+function m3_x_m3(a1,a2){        /*mult 2 3x3 matrices:  [a1][a2]= //m3xm3
+                                a1=[    0, 1, 2,
+                                        3, 4, 5,
+                                        6, 7, 8         ]       */
+                        return [
+                        a1[0]* a2[0] + a1[1]*a2[3] + a1[2]*a2[6],   a1[0]*a2[1] + a1[1]*a2[4] + a1[2]*a2[7],    a1[0]*a2[2] + a1[1]*a2[5] + a1[2]*a2[8],
+                        a1[3]*a2[0] + a1[4]*a2[3] + a1[5]*a2[6],    a1[3]*a2[1] + a1[4]*a2[4] + a1[5]*a2[7],    a1[3]*a2[2] + a1[4]*a2[5] + a1[5]*a2[8],
+                        a1[6]*a2[0] + a1[7]*a2[3] + a1[8]*a2[6],    a1[6]*a2[1] + a1[7]*a2[4] + a1[8]*a2[7],    a1[6]*a2[2] + a1[7]*a2[5] + a1[8]*a2[8],
+                        ]
+}
+//------------------------------------------------------------------------------
+
+function m3_x_v3(a1,a2){        //mult matrice and vector: [3x3]*[3x1]
+  /*
+    [a1][xyz] =
+
+    [   0, 1, 2,][x]
+    [   3, 4, 5,][y]
+    [   6, 7, 8 ][z]
+
+  a1,a2 are actually 1 line vectors for performance
+  returns a 1 line vector [x,y,z]
+                                  */
+  var x = 0,
+      y = 1,
+      z = 2;
+  return [
+    a1[0] * a2[x] + a1[1] * a2[y] + a1[2] * a2[z],
+    a1[3] * a2[x] + a1[4] * a2[y] + a1[5] * a2[z],
+    a1[6] * a2[x] + a1[7] * a2[y] + a1[8] * a2[z],
+  ]
+}
+//------------------------------------------------------------------------------
+
+
+function draw() {
+var startDraw = +new Date()
+	oldtime99=start,
+	initialise_draw();
+	var delaytime=Math.round(start-oldtime99);
+	for (var nP = 0; nP < planes.length; nP++){
+		var p=planes[nP]; //grab next plane from array
+		totalRotation=rotatePoints(p,totalRotation);
+		//var p2_x=p[g1]._y
+		var start1=0,end1=g2,width=canvas1.width,height=canvas1.height
+		middle=Math.round(p.length/2 - g2/2 -1);
+		t.lineWidth = 1;
+		t.strokeStyle = "grey";
+		for (var row = start1; row < end1; row++)
+		for (var col = start1; col < end1; col++) {
+			//var b=row*g2+col; //draws squares vertically down
+			var b=col*g2+row;// draws squares horizontally to right
+			var point=p[b]
+			if ((point._x<width-10)&&(point._x>0)||(point._y<height-10)&&(point._y>0)) q(p,b,b===middle);
+			//vertice_txt(p,b)
+		}
+	}//end drawing all planes
+	drawMseBox(outerX,outerY,stopXY);
+	//drawFPS(start,delaytime)
+	if (help_dialog) showHELP()
+  var millisecs = (+new Date - startDraw)
+  document.getElementById("msg2").innerHTML = Math.round( 1000/( millisecs ) )
+  document.getElementById("msgtop1").innerHTML = millisecs
+
+}//draw
+
+onkeydown=onkeyup=function(e){
+
+	//alert('I work!!' + 'you pressed keyCode: ' + e.keyCode)
+	//js1k eye of beholder
+  	// if this is a keydown event, keyDOWN gets the value 1, otherwise 0
+	keyDOWN=e.type[5]?1:0;
+	key=e.keyCode;
+	var arrow=[37,38,39,40];
+	var left=0,up=1,right=2,down=3;
+	if(key===arrow[up]  ) moveUP()
+	if(key===arrow[down])	moveDOWN()
+	if(key===arrow[left])	moveLEFT()
+	if(key===arrow[right])moveRIGHT()
+	else 0;
+}
+
+function move_planes(x,y){
+		for (var nP = 0; nP < planes.length; nP++){
+		var p=planes[nP]; //grab next plane from array
+		var p1=p.length;
+		while(p1--){
+			p[p1].x+=x;
+			p[p1].y+=y;
+		}
+	}//end moving all planes
+}
+function moveUP(){      move_planes(   0, 1); draw(); offTimer }
+function moveDOWN(){    move_planes(   0,-1); draw(); offTimer  }
+function moveLEFT(){    move_planes(  1,  0); draw(); offTimer }
+function moveRIGHT(){   move_planes( -1,  0); draw(); offTimer }
+
+function moveUP10(){      move_planes(   0, 20); draw(); offTimer }
+function moveDOWN10(){    move_planes(   0,-20); draw(); offTimer  }
+function moveLEFT10(){    move_planes(  20,  0); draw(); offTimer }
+function moveRIGHT10(){   move_planes( -20,  0); draw(); offTimer }
+
+function centre_planes(){
+		for (var nP = 0; nP < planes.length; nP++){
+		var p=planes[nP]; //grab next plane from array
+		var p1=p.length;
+		while(p1--){
+			p[p1].x=p[p1].x0;
+			p[p1].y=p[p1].y0;
+			p[p1].z=p[p1].z0;
+		}
+	}//end moving all planes
+}
+
+
+var planes=[]
+var playerPos=[{}]
+p1=makeGrid(fn1a);
+//p1=makeGrid(fn1);
+
+//add_shadow(p1);
+//alert('hi' + p1[1].color)	;
+planes.push(p1);
+//p2=makeGrid(fn2);	planes.push(p2)
+//var planes=[p1,p2];
+draw()
+        </script>
+
+    </body>
 </html>
